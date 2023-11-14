@@ -1,0 +1,83 @@
+# 安装Apache2和php以及mysql
+
+`sudo apt install apache2`
+`sudo apt install php libapache2-mod-phplibap`
+
+重启Apache2
+`sudo systemctl restart apache2`
+
+修改配置让Apache2使用我们指定的文件夹(src)
+`sudo vim /etc/apache2/sites-available/000-default.conf`
+
+```
+<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+    DocumentRoot /home/username/website # 这里是你的网站文件夹
+    <Directory /home/username/website>
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Order allow,deny
+        allow from all
+    </Directory>
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+```
+
+不要忘了给文件修改权限
+`sudo chown -R www-data:www-data /home/username/website`
+`sudo chmod -R 755 /home/username/website`
+
+重启Apache2
+`sudo systemctl restart apache2`
+
+从浏览器打开`localhost`，若能看到登录界面，则操作成功
+
+接下来安装mysql
+`sudo apt install php-mysql mysql-server`
+
+`sudo mysql_secure_installation` 
+
+验证一下安装好了没
+`sudo systemctl status mysql.service`
+
+启动mysql
+
+`sudo mysql`
+
+这一步是设置密码
+`ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';`
+
+验证一下能否登陆
+
+`mysql -u root -p`
+
+在mysql命令行中，创建一个数据库users，并且放一个表格user_info
+
+```
+CREATE DATABASE users;
+USE users;
+CREATE TABLE user_info (
+    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(30) NOT NULL,
+    password VARCHAR(30) NOT NULL,
+    email VARCHAR(50),
+);
+```
+
+重启apache
+`sudo systemctl restart apache2`
+
+验证一下能否连接到数据库，浏览器访问`localhost/test.php`，如果出现connect successful，则成功
+
+
+# 将LKM加载进内核
+
+`make`
+
+`sudo insmod ./hacker.ko`
+
+使用浏览器登录`localhost`
+
+注册，然后登录。
+
+`dmesg | tail -n 20`查看内核日志，如果出现`username: xxx, password: xxx`，则成功
