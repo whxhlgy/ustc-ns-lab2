@@ -1,7 +1,7 @@
 # 安装Apache2和php以及mysql
 
 `sudo apt install apache2`
-`sudo apt install php libapache2-mod-phplibap`
+`sudo apt install php libapache2-mod-php`
 
 重启Apache2
 `sudo systemctl restart apache2`
@@ -64,8 +64,11 @@ CREATE TABLE user_info (
 );
 ```
 
+不要忘记修改`src/index.php`和`src/test.php`中的数据库密码
+
 重启apache
 `sudo systemctl restart apache2`
+
 
 验证一下能否连接到数据库，浏览器访问`localhost/test.php`，如果出现connect successful，则成功
 
